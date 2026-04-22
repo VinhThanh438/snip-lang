@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SNIP-LANG</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="logo">
+        <span class="logo-icon">✦</span>
+        <span class="logo-text">SNIP-LANG</span>
+      </div>
+      <div id="status-dot" class="status-dot active"></div>
+    </header>
+
+    <div id="view-login" class="view hidden">
+      <p class="subtitle">Đăng nhập để bắt đầu học</p>
+      <form id="login-form">
+        <div class="field">
+          <input id="inp-email" type="email" placeholder="Email" autocomplete="email" />
+        </div>
+        <div class="field">
+          <input id="inp-password" type="password" placeholder="Mật khẩu" />
+        </div>
+        <div id="login-error" class="error-msg hidden"></div>
+        <button type="submit" class="btn btn-primary" id="login-btn">Đăng nhập</button>
+      </form>
+      <a href="http://localhost:3000/login" target="_blank" class="link">Đăng ký tài khoản →</a>
+    </div>
+
+    <div id="view-main" class="view hidden">
+      <div class="user-info">
+        <div class="avatar" id="user-avatar">U</div>
+        <div class="user-meta">
+          <div class="user-name" id="user-name">User</div>
+          <div class="user-email" id="user-email">email@example.com</div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="toggle-group">
+        <div class="toggle-item">
+          <div>
+            <div class="toggle-label">Extension</div>
+            <div class="toggle-desc">Bật/tắt tooltip</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="toggle-extension" checked />
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="toggle-item">
+          <div>
+            <div class="toggle-label">Tự động dịch</div>
+            <div class="toggle-desc">Dịch ngay khi bôi đen</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="toggle-auto-translate" checked />
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="action-group">
+        <button class="btn btn-secondary" id="btn-dashboard">
+          <span>📊</span> Mở Dashboard
+        </button>
+        <button class="btn btn-ghost" id="btn-logout">Đăng xuất</button>
+      </div>
+    </div>
+
+    <div id="view-loading" class="view">
+      <div class="loading-spinner"></div>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

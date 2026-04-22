@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #6366f1;
+  --color-secondary: #8b5cf6;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+}
+
+/* Ghi đè variant dark của Tailwind v4 để dùng class .dark thay vì hệ thống */
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Light Mode (Default) */
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  
+  --glass-bg: rgba(255, 255, 255, 0.6);
+  --glass-border: rgba(0, 0, 0, 0.05);
+  --glass-shadow: rgba(0, 0, 0, 0.05);
+
+  --text-grad-from: #4f46e5;
+  --text-grad-to: #7c3aed;
+}
+
+:root.dark {
+    /* Dark Mode (Nền sáng hơn một chút: #171721 thay vì #08080f) */
+    --background: #171721;
+    --foreground: #f8fafc;
+    
+    --glass-bg: rgba(255, 255, 255, 0.04);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-shadow: rgba(0, 0, 0, 0.2);
+
+    --text-grad-from: #a5b4fc;
+    --text-grad-to: #c4b5fd;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+@utility glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px 0 var(--glass-shadow);
+}
+
+@utility text-gradient {
+  background: linear-gradient(135deg, var(--text-grad-from) 0%, var(--text-grad-to) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
