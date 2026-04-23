@@ -17,18 +17,21 @@
     </header>
 
     <div id="view-login" class="view hidden">
-      <p class="subtitle">Đăng nhập để bắt đầu học</p>
-      <form id="login-form">
-        <div class="field">
-          <input id="inp-email" type="email" placeholder="Email" autocomplete="email" />
-        </div>
-        <div class="field">
-          <input id="inp-password" type="password" placeholder="Mật khẩu" />
-        </div>
-        <div id="login-error" class="error-msg hidden"></div>
-        <button type="submit" class="btn btn-primary" id="login-btn">Đăng nhập</button>
-      </form>
-      <a href="http://localhost:3000/login" target="_blank" class="link">Đăng ký tài khoản →</a>
+      <div class="login-card">
+        <h2 class="welcome-title">Chào mừng trở lại!</h2>
+        <p class="subtitle">Đăng nhập để đồng bộ tiến độ học.</p>
+        <form id="login-form">
+          <div class="field">
+            <input id="inp-email" type="email" placeholder="Email của bạn" autocomplete="email" />
+          </div>
+          <div class="field">
+            <input id="inp-password" type="password" placeholder="Mật khẩu" />
+          </div>
+          <div id="login-error" class="error-msg hidden"></div>
+        <button type="submit" class="btn btn-primary btn-lg" id="login-btn">Đăng nhập</button>
+        </form>
+        <a id="register-link" target="_blank" class="link">Chưa có tài khoản? Đăng ký ngay →</a>
+      </div>
     </div>
 
     <div id="view-main" class="view hidden">
@@ -63,6 +66,17 @@
             <span class="slider"></span>
           </label>
         </div>
+        <div class="toggle-item">
+          <div>
+            <div class="toggle-label">Giao diện</div>
+            <div class="toggle-desc">Sáng / Tối / Hệ thống</div>
+          </div>
+          <select id="select-theme" class="select-input">
+            <option value="system">Hệ thống</option>
+            <option value="light">Sáng</option>
+            <option value="dark">Tối</option>
+          </select>
+        </div>
       </div>
 
       <div class="divider"></div>
@@ -79,6 +93,7 @@
       <div class="loading-spinner"></div>
     </div>
   </div>
+  <script src="../config.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>

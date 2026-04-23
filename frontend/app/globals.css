@@ -1,35 +1,35 @@
 @import "tailwindcss";
+@import "./theme.css";
 
 @theme {
-  --color-primary: #6366f1;
-  --color-secondary: #8b5cf6;
+  --color-primary: var(--sl-color-primary);
+  --color-secondary: var(--sl-color-secondary);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 }
 
-/* Ghi đè variant dark của Tailwind v4 để dùng class .dark thay vì hệ thống */
 @custom-variant dark (&:is(.dark *));
 
 :root {
   /* Light Mode (Default) */
-  --background: #f8fafc;
-  --foreground: #0f172a;
+  --background: var(--sl-bg-light);
+  --foreground: var(--sl-text-light);
   
   --glass-bg: rgba(255, 255, 255, 0.6);
-  --glass-border: rgba(0, 0, 0, 0.05);
+  --glass-border: var(--sl-border-light);
   --glass-shadow: rgba(0, 0, 0, 0.05);
 
-  --text-grad-from: #4f46e5;
-  --text-grad-to: #7c3aed;
+  --text-grad-from: var(--sl-color-primary);
+  --text-grad-to: var(--sl-color-secondary);
 }
 
 :root.dark {
-    /* Dark Mode (Nền sáng hơn một chút: #171721 thay vì #08080f) */
-    --background: #171721;
-    --foreground: #f8fafc;
+    /* Dark Mode */
+    --background: var(--sl-bg-dark);
+    --foreground: var(--sl-text-dark);
     
-    --glass-bg: rgba(255, 255, 255, 0.04);
-    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-bg: rgba(15, 23, 42, 0.3);
+    --glass-border: var(--sl-border-dark);
     --glass-shadow: rgba(0, 0, 0, 0.2);
 
     --text-grad-from: #a5b4fc;

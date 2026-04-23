@@ -1,4 +1,6 @@
-const API_BASE = 'http://localhost:4000/api';
+import '../config.js';
+
+const API_BASE = globalThis.SNIP_CONFIG.API_URL;
 
 async function getToken() {
   return new Promise((resolve) => {
@@ -73,28 +75,63 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
             email: message.email,
             password: message.password,
           });
+          const { accessToken, refreshToken } = data.data.tokens;
+          const { user } = data.data;
+
           await chrome.storage.local.set({
-            accessToken: data.data.tokens.accessToken,
-            refreshToken: data.data.tokens.refreshToken,
-            user: data.data.user,
+            accessToken,
+            refreshToken,
+            user,
           });
-          return { success: true, user: data.data.user };
+
+          // Gửi tín hiệu đăng nhập tới tất cả các tab Web
+          chrome.tabs.query({}, (tabs) => {
+            for (const tab of tabs) {
+              chrome.tabs.sendMessage(tab.id, { 
+                type: 'EXTENSION_LOGGED_IN', 
+                token: accessToken, 
+                user 
+              }).catch(() => {});
+            }
+          });
+
+          return { success: true, user };
         }
         case 'LOGOUT': {
           await chrome.storage.local.remove(['accessToken', 'refreshToken', 'user']);
+          
+          // Gửi tín hiệu đăng xuất tới tất cả các tab Web (localhost:3000)
+          chrome.tabs.query({}, (tabs) => {
+            for (const tab of tabs) {
+              chrome.tabs.sendMessage(tab.id, { type: 'EXTENSION_LOGGED_OUT' }).catch(() => {});
+            }
+          });
+
           return { success: true };
         }
         case 'GET_USER': {
+          const isOurWebsite = _sender.origin === SNIP_CONFIG.WEB_URL || 
+                             (_sender.origin && _sender.origin.includes(SNIP_CONFIG.PROD_WEB_DOMAIN));
+          
           return new Promise((resolve) => {
             chrome.storage.local.get(['user', 'accessToken'], (result) => {
-              resolve({ success: true, user: result.user || null, hasToken: !!result.accessToken });
+              const response = { 
+                success: true, 
+                user: result.user || null, 
+                hasToken: !!result.accessToken 
+              };
+              // Chỉ trả về token thực sự nếu yêu cầu đến từ trang web chính chủ
+              if (isOurWebsite && result.accessToken) {
+                response.token = result.accessToken;
+              }
+              resolve(response);
             });
           });
         }
         case 'GET_SETTINGS': {
           return new Promise((resolve) => {
             chrome.storage.local.get(['settings'], (result) => {
-              resolve({ success: true, settings: result.settings || { autoTranslate: true, enabled: true } });
+              resolve({ success: true, settings: result.settings || { autoTranslate: true, enabled: true, theme: 'system' } });
             });
           });
         }

@@ -13,7 +13,7 @@ export default function SettingsPage() {
   }, []);
 
   return (
-    <div className="p-8 max-w-4xl mx-auto">
+    <div className="p-8 max-w-5xl mx-auto">
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">Cài đặt</h1>
         <p className="text-slate-500 dark:text-slate-400">Tùy chỉnh giao diện và các thiết lập tài khoản của bạn.</p>

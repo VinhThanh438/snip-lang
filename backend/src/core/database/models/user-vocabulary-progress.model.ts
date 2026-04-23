@@ -20,6 +20,7 @@ export interface IUserVocabularyProgress extends Document {
   nextReviewAt: Date;
   lastReviewedAt: Date | null;
   reviewHistory: IReviewEntry[];
+  topics: string[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -51,6 +52,7 @@ const UserVocabularyProgressSchema = new Schema<IUserVocabularyProgress>(
       ],
       default: [],
     },
+    topics: [{ type: String, trim: true }],
   },
   {
     timestamps: true,

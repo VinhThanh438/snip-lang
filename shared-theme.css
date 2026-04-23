@@ -1,0 +1,30 @@
+/* Master Theme Configuration - SNIP-LANG */
+
+:root {
+  /* Common Colors */
+  --sl-color-primary: #033669;
+  --sl-color-primary-light: #064e96;
+  --sl-color-secondary: #064e96;
+  --sl-color-accent: #033669;
+  --sl-color-error: #ef4444;
+  --sl-color-success: #22c55e;
+
+  /* Light Mode Tokens */
+  --sl-bg-light: #ffffff;
+  --sl-text-light: #033669;
+  --sl-text-muted-light: #64748b;
+  --sl-border-light: rgba(0, 0, 0, 0.12);
+  --sl-card-bg-light: #ffffff;
+  --sl-shadow: 0 12px 40px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05);
+
+  /* Dark Mode Tokens */
+  --sl-bg-dark: #171721;
+  --sl-text-dark: #f8fafc;
+  --sl-text-muted-dark: #94a3b8;
+  --sl-border-dark: rgba(255, 255, 255, 0.1);
+  --sl-card-bg-dark: #1e1e2d;
+  --sl-shadow-dark: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+
+  /* Transitions */
+  --sl-transition: all 0.3s ease;
+}

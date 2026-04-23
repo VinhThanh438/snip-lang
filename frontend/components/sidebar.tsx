@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpen, Library, LogOut, Settings } from "lucide-react";
+import { BookOpen, Layers, Languages, LogOut, Settings } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -15,7 +15,8 @@ export function Sidebar() {
 
   const menuItems = [
     { name: "Câu đã lưu", href: "/dashboard", icon: BookOpen },
-    { name: "Từ vựng", href: "/dashboard/vocabulary", icon: Library },
+    { name: "Chủ đề", href: "/dashboard/topics", icon: Layers },
+    { name: "Từ vựng", href: "/dashboard/vocabulary", icon: Languages },
     { name: "Cài đặt", href: "/dashboard/settings", icon: Settings },
   ];
 

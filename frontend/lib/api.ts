@@ -48,5 +48,8 @@ export const api = {
       method: "PATCH",
       body: body ? JSON.stringify(body) : undefined,
     }),
-  delete: (endpoint: string) => fetchApi(endpoint, { method: "DELETE" }),
+  delete: (endpoint: string, body?: any) => fetchApi(endpoint, { 
+    method: "DELETE",
+    body: body ? JSON.stringify(body) : undefined,
+  }),
 };
