@@ -1,7 +1,7 @@
 'use client';
 
 import { useTheme } from '@/components/theme-provider';
-import { Moon, Sun } from 'lucide-react';
+import { Moon, Sun, Settings } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 export default function SettingsPage() {
@@ -14,9 +14,17 @@ export default function SettingsPage() {
 
   return (
     <div className="p-8 max-w-5xl mx-auto">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Cài đặt</h1>
-        <p className="text-slate-500 dark:text-slate-400">Tùy chỉnh giao diện và các thiết lập tài khoản của bạn.</p>
+      <div className="glass-panel p-8 rounded-3xl relative overflow-hidden mb-8">
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-secondary" />
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+            <Settings size={28} />
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-1">Cài đặt</h1>
+            <p className="text-slate-600 dark:text-slate-400">Tùy chỉnh giao diện và các thiết lập tài khoản của bạn.</p>
+          </div>
+        </div>
       </div>
 
       <div className="space-y-6">

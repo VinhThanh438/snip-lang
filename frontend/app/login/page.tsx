@@ -1,12 +1,19 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { api } from '@/lib/api';
 
 export default function LoginPage() {
   const router = useRouter();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      router.push('/dashboard');
+    }
+  }, [router]);
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -20,13 +27,16 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
+      sessionStorage.removeItem('justLoggedOut');
       if (isLogin) {
         const res = await api.post('/auth/login', { email, password });
         localStorage.setItem('token', res.data.tokens.accessToken);
+        localStorage.setItem('user', JSON.stringify(res.data.user));
         router.push('/dashboard');
       } else {
         const res = await api.post('/auth/register', { email, password, displayName });
         localStorage.setItem('token', res.data.tokens.accessToken);
+        localStorage.setItem('user', JSON.stringify(res.data.user));
         router.push('/dashboard');
       }
     } catch (err: any) {

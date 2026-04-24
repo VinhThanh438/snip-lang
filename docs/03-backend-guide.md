@@ -36,10 +36,10 @@ cp .env.example .env
 # Điền các giá trị cần thiết vào .env
 
 # Cài dependencies
-npm install
+yarn install
 
 # Chạy dev server (hot-reload)
-npm run dev
+yarn dev
 ```
 
 ### 2. Yêu cầu
@@ -157,7 +157,7 @@ Vercel chạy serverless, không hỗ trợ long-running process như BullMQ Wor
 
 ### VPS (production)
 ```bash
-npm run build
+yarn build
 pm2 start dist/server.js --name snip-lang-api
 ```
 

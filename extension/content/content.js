@@ -12,28 +12,83 @@
     if (res?.success) currentSettings = res.settings;
   });
 
-  // Tự động đồng bộ trạng thái đăng nhập từ Extension sang Web khi load trang
-  chrome.runtime.sendMessage({ type: 'GET_USER' }, (res) => {
-    if (res?.success && res?.token) {
-      const isOurWebsite = window.location.origin === window.SNIP_CONFIG.WEB_URL || 
-                          window.location.origin.includes(window.SNIP_CONFIG.PROD_WEB_DOMAIN);
+  // Theo dõi token cục bộ để phát hiện đăng xuất trên Web
+  let lastLocalToken = localStorage.getItem('token');
+
+  function syncAuth() {
+    chrome.runtime.sendMessage({ type: 'GET_USER' }, (res) => {
+      const origin = window.location.origin;
+      const isOurWebsite = origin === window.SNIP_CONFIG.WEB_URL || 
+                          origin.includes(window.SNIP_CONFIG.PROD_WEB_DOMAIN) ||
+                          origin.includes('localhost:3000') ||
+                          origin.includes('127.0.0.1:3000');
       
-      if (isOurWebsite) {
-        const localToken = localStorage.getItem('token');
-        if (localToken !== res.token) {
-          localStorage.setItem('token', res.token);
-          if (res.user) localStorage.setItem('user', JSON.stringify(res.user));
-          
-          // Nếu đang ở trang login thì vào thẳng dashboard
-          if (window.location.pathname === '/login') {
-            window.location.href = '/dashboard';
-          } else {
+      if (!isOurWebsite) return;
+
+      const localToken = localStorage.getItem('token');
+      const localUser = localStorage.getItem('user');
+
+      // Nếu vừa đăng xuất trên Web (Token từ có thành không) -> Đồng bộ sang Extension
+      if (lastLocalToken && !localToken) {
+        chrome.runtime.sendMessage({ type: 'LOGOUT' });
+      }
+      lastLocalToken = localToken;
+
+      if (res?.success) {
+        if (res.token) {
+          // Extension đang có Token
+          if (!localToken) {
+            // Web không có Token: Chỉ đồng bộ nếu đang ở trang login (chủ động đăng nhập)
+            // Và phải đảm bảo không phải vừa mới đăng xuất xong (check URL)
+            if (window.location.pathname === '/login' && !window.location.search.includes('logout=true')) {
+              localStorage.setItem('token', res.token);
+              if (res.user) localStorage.setItem('user', JSON.stringify(res.user));
+              window.location.href = '/dashboard';
+            }
+          } else if (localToken !== res.token) {
+            // Cả hai có nhưng khác nhau: Ưu tiên Extension (Master)
+            localStorage.setItem('token', res.token);
+            if (res.user) localStorage.setItem('user', JSON.stringify(res.user));
             window.location.reload();
           }
+        } else if (localToken) {
+          // Web có Token nhưng Extension không có: Đồng bộ sang Extension
+          chrome.runtime.sendMessage({
+            type: 'SYNC_AUTH',
+            token: localToken,
+            user: localUser ? JSON.parse(localUser) : null
+          });
         }
       }
+    });
+  }
+
+  // Chạy lúc load trang
+  syncAuth();
+
+  // Lắng nghe thay đổi localStorage để đồng bộ Logout từ Web sang Extension (từ tab khác)
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'token' && !e.newValue) {
+      chrome.runtime.sendMessage({ type: 'LOGOUT' });
     }
   });
+
+  // Đồng bộ ngay khi người dùng tương tác với trang
+  document.addEventListener('mousedown', () => {
+    syncAuth();
+  }, { passive: true });
+
+  // Kiểm tra định kỳ (để bắt kịp các thay đổi cùng tab)
+  setInterval(syncAuth, 1000);
+
+  // Đánh chặn hành động Click vào nút Đăng xuất để đồng bộ ngay lập tức
+  document.addEventListener('click', (e) => {
+    const target = e.target;
+    const logoutBtn = target.closest('#sl-logout-btn');
+    if (logoutBtn || (target.textContent && (target.textContent.includes('Đăng xuất') || target.textContent.includes('Log out')))) {
+      chrome.runtime.sendMessage({ type: 'LOGOUT' });
+    }
+  }, true);
 
   chrome.runtime.onMessage.addListener((message) => {
     if (message.type === 'EXTENSION_LOGGED_OUT') {

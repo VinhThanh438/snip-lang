@@ -35,10 +35,10 @@ async function init() {
   showView('loading');
   const res = await sendMsg({ type: 'GET_USER' });
 
-  if (res?.user && res?.hasToken) {
-    $('user-name').textContent = res.user.displayName || 'User';
-    $('user-email').textContent = res.user.email || '';
-    $('user-avatar').textContent = (res.user.displayName || 'U')[0].toUpperCase();
+  if (res?.hasToken) {
+    $('user-name').textContent = res.user?.displayName || 'Thành viên';
+    $('user-email').textContent = res.user?.email || '';
+    $('user-avatar').textContent = (res.user?.displayName || 'U')[0].toUpperCase();
     await loadSettings();
     showView('main');
   } else {
@@ -99,5 +99,12 @@ async function onToggleChange() {
 $('toggle-extension')?.addEventListener('change', onToggleChange);
 $('toggle-auto-translate')?.addEventListener('change', onToggleChange);
 $('select-theme')?.addEventListener('change', onToggleChange);
+
+// Lắng nghe tin hiệu từ background để cập nhật giao diện tức thì
+chrome.runtime.onMessage.addListener((message) => {
+  if (message.type === 'EXTENSION_LOGGED_IN' || message.type === 'EXTENSION_LOGGED_OUT') {
+    init();
+  }
+});
 
 init();

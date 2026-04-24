@@ -22,7 +22,8 @@ export function Sidebar() {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    window.location.href = "/login";
+    localStorage.removeItem("user");
+    window.location.href = "/login?logout=true";
   };
 
   if (!isClient)
@@ -62,6 +63,7 @@ export function Sidebar() {
 
       <div className="p-4 border-t border-white/5">
         <button
+          id="sl-logout-btn"
           onClick={handleLogout}
           className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg font-medium text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-all duration-200"
         >

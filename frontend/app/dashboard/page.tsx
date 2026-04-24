@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { api } from '@/lib/api';
 import { formatDistanceToNow } from 'date-fns';
 import { vi } from 'date-fns/locale';
+import { Bookmark } from 'lucide-react';
 
 interface Sentence {
   _id: string;
@@ -49,10 +50,16 @@ export default function DashboardPage() {
 
   return (
     <div className="p-8 max-w-5xl mx-auto">
-      <div className="flex justify-between items-end mb-8">
-        <div>
-          <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2">Câu đã lưu</h1>
-          <p className="text-slate-500 dark:text-slate-400">Danh sách các câu tiếng Anh bạn đã bôi đen từ Extension.</p>
+      <div className="glass-panel p-8 rounded-3xl relative overflow-hidden mb-8">
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-secondary" />
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+            <Bookmark size={28} />
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-1">Câu đã lưu</h1>
+            <p className="text-slate-600 dark:text-slate-400">Danh sách các câu tiếng Anh bạn đã bôi đen từ Extension.</p>
+          </div>
         </div>
       </div>
 

@@ -155,7 +155,7 @@ export function SaveVocabDialog({ isOpen, onClose, vocab, onSuccess }: SaveVocab
           <button
             onClick={handleSave}
             disabled={saving}
-            className="px-6 py-2 bg-gradient-to-r from-primary to-primary-light text-white rounded-lg text-sm font-medium hover:opacity-90 transition-opacity flex items-center gap-2 disabled:opacity-50"
+            className="px-6 py-2 bg-gradient-to-r from-primary to-secondary text-white rounded-lg text-sm font-medium hover:opacity-90 transition-opacity flex items-center gap-2 disabled:opacity-50 shadow-lg shadow-primary/20"
           >
             {saving ? <Loader2 size={16} className="animate-spin" /> : 'Lưu lại'}
           </button>

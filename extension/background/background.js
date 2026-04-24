@@ -139,6 +139,27 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
           await chrome.storage.local.set({ settings: message.settings });
           return { success: true };
         }
+        case 'SYNC_AUTH': {
+          const { token, user, refreshToken } = message;
+          await chrome.storage.local.set({
+            accessToken: token,
+            refreshToken: refreshToken || null,
+            user: user || null,
+          });
+
+          // Phát tin hiệu cho tất cả các tab khác
+          chrome.tabs.query({}, (tabs) => {
+            for (const tab of tabs) {
+              chrome.tabs.sendMessage(tab.id, { 
+                type: 'EXTENSION_LOGGED_IN', 
+                token: token, 
+                user: user 
+              }).catch(() => {});
+            }
+          });
+
+          return { success: true };
+        }
         default:
           return { success: false, error: 'Unknown message type' };
       }

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { api } from '@/lib/api';
-import { CheckCircle2, Clock, BookOpen, Layers, XCircle, Search } from 'lucide-react';
+import { CheckCircle2, Clock, BookOpen, Layers, X, Search } from 'lucide-react';
 
 interface VocabProgress {
   _id: string;
@@ -105,10 +105,10 @@ export default function VocabularyPage() {
             <div key={v._id} className="glass-panel p-6 rounded-2xl flex flex-col md:flex-row gap-6 relative group transition-all hover:shadow-lg hover:border-primary/20">
               <button
                 onClick={() => handleUnsave(v.word)}
-                className="absolute top-4 right-4 p-2 rounded-full text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100"
+                className="absolute top-3 right-3 p-1.5 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all opacity-0 group-hover:opacity-100 focus:opacity-100"
                 title="Bỏ lưu từ vựng"
               >
-                <XCircle size={20} />
+                <X size={18} />
               </button>
 
               <div className="md:w-1/3 flex flex-col justify-center">
