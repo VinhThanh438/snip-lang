@@ -24,9 +24,25 @@ const limiter = rateLimit({
   message: { success: false, error: 'Quá nhiều request, vui lòng thử lại sau' },
 });
 
+const allowedOrigins = [
+  config.cors.frontendUrl,
+  `chrome-extension://${config.cors.extensionId}`,
+  'http://localhost:3000',
+  'https://snip-lang.vercel.app',
+  'https://snip-lang.com'
+];
+
 app.use(helmet());
 app.use(cors({
-  origin: [config.cors.frontendUrl, `chrome-extension://${config.cors.extensionId}`],
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
+      return callback(null, true);
+    }
+    // Log the rejected origin for debugging
+    console.warn(`CORS blocked request from origin: ${origin}`);
+    callback(new Error('Not allowed by CORS'));
+  },
   credentials: true,
 }));
 app.use(limiter);
