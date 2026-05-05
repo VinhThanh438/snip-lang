@@ -1,4 +1,5 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api";
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || "https://snip-lang-backend.vercel.app/api";
 
 class ApiError extends Error {
   constructor(
@@ -48,8 +49,9 @@ export const api = {
       method: "PATCH",
       body: body ? JSON.stringify(body) : undefined,
     }),
-  delete: (endpoint: string, body?: any) => fetchApi(endpoint, { 
-    method: "DELETE",
-    body: body ? JSON.stringify(body) : undefined,
-  }),
+  delete: (endpoint: string, body?: any) =>
+    fetchApi(endpoint, {
+      method: "DELETE",
+      body: body ? JSON.stringify(body) : undefined,
+    }),
 };
