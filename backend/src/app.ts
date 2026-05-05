@@ -6,6 +6,7 @@ import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
 
 import { config } from './core/config';
+import { connectDatabase } from './core/database/connection';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware';
 
 import authRoute from './modules/auth/auth.route';
@@ -31,7 +32,21 @@ app.use(cors({
 app.use(limiter);
 app.use(express.json({ limit: '10kb' }));
 app.use(cookieParser());
-app.use(morgan(config.isDev ? 'dev' : 'combined'));
+
+// Only use morgan in non-serverless environments to avoid noise
+if (!config.isVercel) {
+  app.use(morgan(config.isDev ? 'dev' : 'combined'));
+}
+
+// Ensure DB connection on every request (serverless-safe)
+app.use(async (_req, _res, next) => {
+  try {
+    await connectDatabase();
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
 
 app.get('/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });

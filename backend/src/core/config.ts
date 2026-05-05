@@ -13,13 +13,15 @@ export const config = {
   env: process.env.NODE_ENV || 'development',
   port: parseInt(process.env.PORT || '4000', 10),
   isDev: process.env.NODE_ENV === 'development',
+  isVercel: !!process.env.VERCEL,
 
   mongodb: {
     uri: requireEnv('MONGODB_URI'),
   },
 
   redis: {
-    url: requireEnv('REDIS_URL'),
+    url: process.env.REDIS_URL || '',
+    enabled: !!process.env.REDIS_URL,
   },
 
   jwt: {

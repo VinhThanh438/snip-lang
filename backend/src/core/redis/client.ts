@@ -4,7 +4,8 @@ import { logger } from '../logger';
 
 let redisClient: Redis | null = null;
 
-export function getRedisClient(): Redis {
+export function getRedisClient(): Redis | null {
+  if (!config.redis.enabled) return null;
   if (redisClient) return redisClient;
 
   redisClient = new Redis(config.redis.url, {
