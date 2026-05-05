@@ -15,8 +15,9 @@ interface VocabProgress {
 }
 
 import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 
-export default function VocabularyPage() {
+function VocabularyContent() {
   const searchParams = useSearchParams();
   const topicFilter = searchParams.get('topic');
   
@@ -165,5 +166,13 @@ export default function VocabularyPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function VocabularyPage() {
+  return (
+    <Suspense fallback={<div className="p-8 flex justify-center"><div className="animate-spin w-8 h-8 border-2 border-primary border-t-transparent rounded-full" /></div>}>
+      <VocabularyContent />
+    </Suspense>
   );
 }

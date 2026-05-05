@@ -18,10 +18,7 @@
   function syncAuth() {
     chrome.runtime.sendMessage({ type: 'GET_USER' }, (res) => {
       const origin = window.location.origin;
-      const isOurWebsite = origin === window.SNIP_CONFIG.WEB_URL || 
-                          origin.includes(window.SNIP_CONFIG.PROD_WEB_DOMAIN) ||
-                          origin.includes('localhost:3000') ||
-                          origin.includes('127.0.0.1:3000');
+      const isOurWebsite = origin === window.SNIP_CONFIG.WEB_URL || origin.includes(window.SNIP_CONFIG.PROD_WEB_DOMAIN);
       
       if (!isOurWebsite) return;
 

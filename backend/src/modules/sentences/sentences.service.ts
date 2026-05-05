@@ -1,7 +1,6 @@
 import crypto from 'crypto';
 import { SentenceModel } from '../../core/database/models/sentence.model';
 import { SentenceAnalysisModel } from '../../core/database/models/sentence-analysis.model';
-import { getRedisClient, CacheKeys } from '../../core/redis/client';
 import { analyzeSentenceWithAI } from '../../core/ai/gemini.service';
 import { config } from '../../core/config';
 import { Errors } from '../../core/errors';
@@ -22,7 +21,7 @@ function extractDomain(url: string): string {
 
 /**
  * Perform AI analysis inline (serverless-compatible).
- * No queue/worker needed — runs directly in the request handler.
+ * Runs directly in the request handler.
  */
 async function analyzeInline(sentenceId: string, text: string, textHash: string): Promise<void> {
   try {
@@ -60,16 +59,6 @@ async function analyzeInline(sentenceId: string, text: string, textHash: string)
       analysisId: analysis._id,
     });
 
-    // Cache in Redis if available
-    const redis = getRedisClient();
-    if (redis) {
-      await redis.setex(
-        CacheKeys.analysis(textHash),
-        config.cache.analysisTtlSeconds,
-        analysis._id.toString()
-      );
-    }
-
     logger.info(`Analysis completed for sentence ${sentenceId} in ${processingTimeMs}ms`);
   } catch (err) {
     logger.error(`Analysis failed for sentence ${sentenceId}`, { error: (err as Error).message });
@@ -81,42 +70,20 @@ export async function saveSentence(userId: string, dto: SaveSentenceDto) {
   const textHash = hashText(dto.text);
   const sourceDomain = extractDomain(dto.sourceUrl || '');
 
-  // Check cache first (Redis if available, then DB)
-  const redis = getRedisClient();
-  if (redis) {
-    const cachedAnalysis = await redis.get(CacheKeys.analysis(textHash));
-    if (cachedAnalysis) {
-      const existingAnalysis = await SentenceAnalysisModel.findOne({ textHash });
-      if (existingAnalysis) {
-        const sentence = await SentenceModel.create({
-          userId,
-          text: dto.text,
-          textHash,
-          sourceUrl: dto.sourceUrl || '',
-          sourceTitle: dto.sourceTitle || '',
-          sourceDomain,
-          analysisStatus: 'completed',
-          analysisId: existingAnalysis._id,
-        });
-        return sentence;
-      }
-    }
-  } else {
-    // No Redis — check DB directly for existing analysis
-    const existingAnalysis = await SentenceAnalysisModel.findOne({ textHash });
-    if (existingAnalysis) {
-      const sentence = await SentenceModel.create({
-        userId,
-        text: dto.text,
-        textHash,
-        sourceUrl: dto.sourceUrl || '',
-        sourceTitle: dto.sourceTitle || '',
-        sourceDomain,
-        analysisStatus: 'completed',
-        analysisId: existingAnalysis._id,
-      });
-      return sentence;
-    }
+  // Check DB for existing analysis
+  const existingAnalysis = await SentenceAnalysisModel.findOne({ textHash });
+  if (existingAnalysis) {
+    const sentence = await SentenceModel.create({
+      userId,
+      text: dto.text,
+      textHash,
+      sourceUrl: dto.sourceUrl || '',
+      sourceTitle: dto.sourceTitle || '',
+      sourceDomain,
+      analysisStatus: 'completed',
+      analysisId: existingAnalysis._id,
+    });
+    return sentence;
   }
 
   const sentence = await SentenceModel.create({
@@ -129,9 +96,7 @@ export async function saveSentence(userId: string, dto: SaveSentenceDto) {
     analysisStatus: 'pending',
   });
 
-  // Inline analysis (no queue needed for serverless)
-  // Run without awaiting so the response returns quickly.
-  // In serverless the function stays alive until all promises resolve.
+  // Inline analysis — fire and forget
   analyzeInline(sentence._id.toString(), dto.text, textHash);
 
   return sentence;

@@ -19,11 +19,6 @@ export const config = {
     uri: requireEnv('MONGODB_URI'),
   },
 
-  redis: {
-    url: process.env.REDIS_URL || '',
-    enabled: !!process.env.REDIS_URL,
-  },
-
   jwt: {
     accessSecret: requireEnv('JWT_ACCESS_SECRET'),
     refreshSecret: requireEnv('JWT_REFRESH_SECRET'),

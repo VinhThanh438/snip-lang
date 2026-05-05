@@ -1,5 +1,5 @@
 const SNIP_CONFIG = {
-  API_URL: 'http://localhost:4000/api',
+  API_URL: 'https://snip-lang-backend.vercel.app/api',
   WEB_URL: 'http://localhost:3000',
   PROD_WEB_DOMAIN: 'snip-lang.com'
 };

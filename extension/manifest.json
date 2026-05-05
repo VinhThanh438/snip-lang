@@ -32,6 +32,6 @@
   ],
   "host_permissions": [
     "http://localhost:4000/*",
-    "https://your-api-domain.com/*"
+    "https://snip-lang-backend.vercel.app/*"
   ]
 }
